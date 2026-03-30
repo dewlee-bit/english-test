@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>2026학년도 고2 진단고사</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{--bg:#F7F5F0;--surface:#fff;--ink:#1A1714;--muted:#6B6560;--accent:#1B4FD8;--al:#EEF3FF;--border:#E5E2DE;--green:#166534;--gbg:#DCFCE7;--radius:12px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:'Apple SD Gothic Neo',Pretendard,'Noto Sans KR',sans-serif;color:var(--ink);min-height:100vh;font-size:15px}
+#cover{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 20px;text-align:center;position:relative}
+#cover::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#1B4FD8,#3B82F6)}
+.badge{font-size:11px;font-weight:700;letter-spacing:2.5px;color:var(--accent);margin-bottom:20px;text-transform:uppercase}
+#cover h1{font-size:clamp(28px,6vw,52px);font-weight:800;line-height:1.2;margin-bottom:8px;letter-spacing:-0.5px}
+.sub{font-size:14px;color:var(--muted);margin-bottom:40px}
+.stats{display:flex;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--surface);margin-bottom:40px}
+.stat{padding:18px 28px;text-align:center;flex:1}
+.stat+.stat{border-left:1px solid var(--border)}
+.sn{font-size:26px;font-weight:800;color:var(--accent);display:block}
+.sl{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.ig{width:100%;max-width:340px;margin-bottom:10px;text-align:left}
+.ig label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:7px;letter-spacing:.5px;text-transform:uppercase}
+.ig input{width:100%;padding:13px 16px;border:1.5px solid var(--border);border-radius:var(--radius);font-family:inherit;font-size:15px;background:var(--surface);color:var(--ink);outline:none;transition:border-color .2s}
+.ig input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(27,79,216,.1)}
+.btn-go{width:100%;max-width:340px;padding:15px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius);font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;letter-spacing:.3px}
+.btn-go:hover{background:#1740b0;transform:translateY(-1px);box-shadow:0 6px 20px rgba(27,79,216,.3)}
+/* QUIZ */
+#quiz{display:none}
+.hdr{position:sticky;top:0;z-index:100;background:rgba(247,245,240,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+.hdr-in{max-width:760px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:12px}
+.hdr-t{font-size:13px;font-weight:700;white-space:nowrap}
+.pb-wrap{flex:1;height:5px;background:var(--border);border-radius:100px;overflow:hidden}
+.pb-fill{height:100%;background:var(--accent);border-radius:100px;width:0%;transition:width .4s}
+.pb-lbl{font-size:12px;color:var(--muted);white-space:nowrap}
+.pb-lbl b{color:var(--accent)}
+.qbody{max-width:760px;margin:0 auto;padding:0 16px 80px}
+.sec{margin:40px 0 16px;padding:12px 18px;background:var(--ink);color:#fff;border-radius:10px;display:flex;align-items:center;justify-content:space-between}
+.sec h2{font-size:13px;font-weight:700}
+.sec span{font-size:11px;opacity:.55}
+.qc{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:12px;position:relative;transition:border-color .2s}
+.qc.done{border-color:#93C5FD;box-shadow:0 0 0 1px #93C5FD}
+.qnum{width:26px;height:26px;background:var(--accent);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;margin-top:1px}
+.qc.done .qnum{background:var(--green)}
+.qtop{display:flex;gap:11px;margin-bottom:12px}
+.qtype{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:5px}
+.qtext{font-size:14.5px;line-height:1.75}
+.pts{position:absolute;top:14px;right:16px;font-size:10px;color:var(--muted);background:var(--bg);padding:2px 8px;border-radius:100px;border:1px solid var(--border)}
+.passage{background:#F8FAFC;border:1px solid #E2E8F0;border-left:4px solid var(--accent);border-radius:8px;padding:14px 17px;font-size:13px;line-height:1.85;color:#374151;margin:12px 0}
+.opts{display:flex;flex-direction:column;gap:7px;margin-top:12px}
+.ol{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1.5px solid var(--border);border-radius:9px;cursor:pointer;transition:all .15s;user-select:none}
+.ol:hover{border-color:var(--accent);background:var(--al)}
+.ol.sel{border-color:var(--accent);background:var(--al)}
+.ol input{display:none}
+.oc{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--muted);flex-shrink:0;transition:all .15s;margin-top:1px}
+.ol.sel .oc{background:var(--accent);border-color:var(--accent);color:#fff}
+.ot{font-size:13.5px;line-height:1.55;padding-top:2px}
+.sub-wrap{max-width:760px;margin:0 auto;padding:0 16px 60px}
+.sub-bar{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:20px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.sub-info{font-size:14px;color:var(--muted)}
+.btn-sub{padding:13px 34px;background:var(--ink);color:#fff;border:none;border-radius:var(--radius);font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-sub:hover{background:#2d2926;transform:translateY(-1px)}
+/* RESULT */
+#result{display:none;min-height:100vh;align-items:center;justify-content:center;padding:60px 20px;flex-direction:column;text-align:center}
+#result::before{content:'';position:fixed;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#1B4FD8,#3B82F6)}
+.rb{max-width:420px;width:100%}
+.re{font-size:52px;margin-bottom:18px;display:block}
+.rb h2{font-size:28px;font-weight:800;margin-bottom:10px}
+.rb>p{color:var(--muted);font-size:14px;margin-bottom:26px;line-height:1.6}
+.sc{background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:32px;margin-bottom:14px}
+.sn2{font-size:76px;font-weight:900;color:var(--accent);line-height:1}
+.sd{font-size:15px;color:var(--muted);margin-top:4px}
+.lv{display:inline-block;background:var(--ink);color:#fff;font-size:13px;font-weight:700;padding:8px 22px;border-radius:100px;margin-top:16px}
+.rn{font-size:12px;color:var(--muted);line-height:1.7}
+@media(max-width:560px){.stat{padding:14px 12px}.qc{padding:16px 14px}.sub-bar{flex-direction:column}.btn-sub{width:100%}.hdr-t{display:none}}
+</style>
+
+</head>
+<body>
+
+<section id="cover">
+  <div class="badge">2026학년도 진단고사</div>
+  <h1>고2<br>영어영역</h1>
+  <p class="sub">고2 English Placement Test · 총 30문항</p>
+  <div class="stats">
+    <div class="stat"><span class="sn">30</span><span class="sl">문항</span></div>
+    <div class="stat"><span class="sn">5</span><span class="sl">유형</span></div>
+    <div class="stat"><span class="sn">50</span><span class="sl">분</span></div>
+  </div>
+  <div class="ig">
+    <label for="sn">이름</label>
+    <input type="text" id="sn" placeholder="홍길동" autocomplete="off">
+  </div>
+  <button class="btn-go" onclick="start()">시험 시작 →</button>
+</section>
+
+<div id="quiz">
+  <div class="hdr">
+    <div class="hdr-in">
+      <span class="hdr-t">고2 영어 진단고사</span>
+      <div class="pb-wrap"><div class="pb-fill" id="pf"></div></div>
+      <span class="pb-lbl"><b id="dc">0</b>/30</span>
+    </div>
+  </div>
+  <div class="qbody" id="qb"></div>
+  <div class="sub-wrap">
+    <div class="sub-bar">
+      <div class="sub-info" id="si"><b>0/30문항</b> 완료</div>
+      <button class="btn-sub" onclick="submit()">답안 제출하기</button>
+    </div>
+  </div>
+</div>
+
+<section id="result">
+  <div class="rb">
+    <span class="re">📋</span>
+    <h2>제출 완료!</h2>
+    <p>수고하셨습니다.<br>선생님이 결과를 확인 후 연락드릴게요.</p>
+    <div class="sc">
+      <div class="sn2" id="rs">—</div>
+      <div class="sd">점 / 30점</div>
+      <div class="lv" id="rl">—</div>
+    </div>
+    <p class="rn">결과를 캡처해서 선생님께 보내주세요.<br>창을 닫으셔도 됩니다.</p>
+  </div>
+</section>
+
+<script>
+const Q=[
+  {
+    "sec": "유형1 · 심경/의미/주제",
+    "t": "심경 변화",
+    "pts": 2,
+    "q": "다음 글에 드러난 'I'의 심경 변화로 가장 적절한 것은?",
+    "p": "I was heading in the direction of a forest road that I knew would take me home. But almost as though someone had switched off all the lights I was suddenly in a black forest with no light of any kind. Feeling lost, I stumbled. I fell. I tore my clothes and injured myself falling down a hill. In desperation I stopped and leaned against a tree. I have no idea where I am now. Will anyone even notice that I'm gone? It was then that a faint aroma drifted through the darkness: the scent of cooking. I stumbled towards it, and soon, a faint, yellowish light glowed through the trees. It was Uncle Krull's cabin and I could see him through the window! Thankful beyond words, I knew I could finally ask for help. My hardship was over.",
+    "o": [
+      "① curious → amazed",
+      "② bored → satisfied",
+      "③ hopeless → relieved",
+      "④ frustrated → regretful",
+      "⑤ indifferent → grateful"
+    ],
+    "a": 2
+  },
+  {
+    "t": "밑줄 함축 의미",
+    "pts": 4,
+    "q": "밑줄 친 the silent killers가 다음 글에서 의미하는 바로 가장 적절한 것은?",
+    "p": "Author Elizabeth Gilbert tells the fable of a great saint who would lead his followers in meditation. Just as the followers were dropping into their zen moment, they would be disrupted by a cat that would walk through the temple meowing and bothering everyone. The saint came up with a simple solution: He began to tie the cat to a pole during meditation sessions. This solution quickly developed into a ritual: Tie the cat to the pole first, meditate second. When the cat eventually died of natural causes, a religious crisis followed. What were the followers supposed to do? How could they possibly meditate without tying the cat to the pole? This story illustrates what I call invisible rules. These are habits and behaviors that have unnecessarily rigidified into rules. Although written rules can be resistant to change, invisible ones are more stubborn. They're the silent killers.\n\n* zen: (불교) 선(禪) ** rigidify: 굳게 하다",
+    "o": [
+      "① hidden rules that govern our actions unconsciously",
+      "② noises that restrict one's level of concentration",
+      "③ surroundings that lead to the death of a cat",
+      "④ internal forces that slowly lower our self-esteem",
+      "⑤ experiences that discourage us from following rules"
+    ],
+    "a": 0
+  },
+  {
+    "t": "글의 주제",
+    "pts": 4,
+    "q": "다음 글의 주제로 가장 적절한 것은?",
+    "p": "Education must focus on the trunk of the tree of knowledge, revealing the ways in which the branches, twigs, and leaves all emerge from a common core. Tools for thinking stem from this core, providing a common language with which practitioners in different fields may share their experience of the process of innovation and discover links between their creative activities. When the same terms are employed across the curriculum, students begin to link different subjects and classes. If they practice abstracting in writing class, if they work on abstracting in painting or drawing class, and if, in all cases, they call it abstracting, they begin to understand how to think beyond disciplinary boundaries. They see how to transform their thoughts from one mode of conception and expression to another. Linking the disciplines comes naturally when the terms and tools are presented as part of a universal imagination.",
+    "o": [
+      "① difficulties in finding meaningful links between disciplines",
+      "② drawbacks of applying a common language to various fields",
+      "③ effects of diversifying the curriculum on students' creativity",
+      "④ necessity of using a common language to integrate the curriculum",
+      "⑤ usefulness of turning abstract thoughts into concrete expressions"
+    ],
+    "a": 3
+  },
+  {
+    "t": "글의 제목",
+    "pts": 2,
+    "q": "다음 글의 제목으로 가장 적절한 것은?",
+    "p": "We tend to break up time into units, such as weeks, months, and seasons; in a series of studies among farmers in India and students in North America, psychologists found that if a deadline is on the other side of a \"break\" — such as in the New Year — we're more likely to see it as remote, and, as a result, be less ready to jump into action. What you need to do in that situation is find another way to think about the timeframe. For example, if it's November and the deadline is in January, it's better to tell yourself you have to get it done \"this winter\" rather than \"next year.\" The best approach is to view deadlines as a challenge that you have to meet within a period that's imminent.\n\n* imminent: 임박한",
+    "o": [
+      "① Delayed Deadlines: No Hurries, No Worries",
+      "② How Stress Affects Your Perception of Time",
+      "③ Why Do We Manage Our Tasks Worse in Winter?",
+      "④ Trick Your Mind to Get Your Work Done in Time",
+      "⑤ The Sooner You Start, The More Errors You Make"
+    ],
+    "a": 3
+  },
+  {
+    "sec": "유형2 · 어법 (5~14번)",
+    "t": "어법상 틀린 것",
+    "pts": 4,
+    "q": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "p": "Consider The Wizard of Oz as a psychological study of motivation. Dorothy and her three friends work hard to get to the Emerald City, overcoming barriers, persisting against all adversaries. They do so because they expect the Wizard to give ① them what they are missing. Instead, the wonderful (and wise) Wizard makes them aware that they, not he, always had the power ② to fulfill their wishes. For Dorothy, home is not a place but a feeling of security, of comfort with people she loves; it is wherever her heart is. The courage the Lion wants, the intelligence the Scarecrow longs for, and the emotions the Tin Man dreams of ③ being attributes they already possess. They need to think about these attributes not as internal conditions but as positive ways ④ in which they are already relating to others. After all, didn't they demonstrate those qualities on the journey to Oz, a journey ⑤ motivated by little more than an expectation?",
+    "o": [
+      "① them",
+      "② to fulfill",
+      "③ being",
+      "④ in which",
+      "⑤ motivated"
+    ],
+    "a": 2
+  },
+  {
+    "t": "어법상 틀린 것",
+    "pts": 4,
+    "q": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "p": "What makes practicing retrieval so much better than review? More difficult retrieval ① leads to better learning, provided the act of retrieval is itself successful. Free recall tests, in which students need to recall as much as they can remember without prompting, tend to result in better retention than cued recall tests, in which students ② give hints about what they need to remember. Cued recall tests, in turn, are better than recognition tests, such as multiple-choice answers, ③ where the correct answer needs to be recognized but not generated. Giving someone a test immediately after they learn something improves retention less than giving them a slight delay, long enough so that answers aren't in mind when they need ④ them. Difficulty, far from being a barrier to ⑤ making retrieval work, may be part of the reason it does so.",
+    "o": [
+      "① leads",
+      "② give",
+      "③ where",
+      "④ them",
+      "⑤ making"
+    ],
+    "a": 1
+  },
+  {
+    "t": "어법상 틀린 것",
+    "pts": 3,
+    "q": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "p": "When we assess potential, we make the cardinal error of focusing on starting points — the abilities that are immediately visible. In a world obsessed with innate talent, we assume the people with the most promise ① are the ones who stand out right away. But high achievers vary dramatically in their initial aptitudes. If we judge people only by what they can do on day one, their potential remains hidden. You can't tell ② where people will land from where they begin. With the right opportunity and motivation ③ to learn, anyone can build the skills to achieve greater things. We need to focus less on starting points and more on distance ④ traveled. For every Mozart who makes a big splash early, there are multiple Bachs who ascend slowly and ⑤ blooming late.",
+    "o": [
+      "① are",
+      "② where",
+      "③ to learn",
+      "④ traveled",
+      "⑤ blooming"
+    ],
+    "a": 4
+  },
+  {
+    "t": "어법상 틀린 것",
+    "pts": 3,
+    "q": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "p": "There is a kind of artificial intelligence application that is frequently advertised, which can be described as \"vaporware\". Vaporware is applications that have either been announced or made ① available for sale but are not yet fully functional as artificial intelligence applications. It is often systems that seem to run on AI technologies, but which in fact ② do not. Instead, they are frequently built by people manually adding the content ③ that the AI application is supposed to be processing. This is frequently done because initially it is cheaper to pay people to add this content than it is ④ to develop full AI capabilities and populate the data. Taking a vaporware product to market means developers can validate ideas with customers before investing the amounts ⑤ require to build a full application.\n\n* populate: 채우다",
+    "o": [
+      "① available",
+      "② do",
+      "③ that",
+      "④ to develop",
+      "⑤ require"
+    ],
+    "a": 4
+  },
+  {
+    "t": "어법상 틀린 것",
+    "pts": 3,
+    "q": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "p": "Working with neuroscientists who use neuroimaging to understand how the human brain works, anthropologist Simon Cohn has shown the extent ① to which scientists need to develop personal, even intimate, relationships with their subjects in order to secure their cooperation. Only by enlisting subjects in a social relationship, even if briefly, ② do the researchers feel they can depend on the subjects to follow directions to the best of their ability. ③ Strapped down uncomfortably in a dark, noisy scanner, subjects must nonetheless pay attention and follow directions in order to produce data the researchers can use. Before the subjects ever enter the scanner, researchers provide ④ them with reassurance and sympathy and share personal experiences. Although these tactics might influence the specific subjective experiences revealed in the scanner, they are carefully eliminated from the experimental reports so that only the signals from subjects' brains in response to stimuli in the scanner ⑤ coming to light.",
+    "o": [
+      "① to which",
+      "② do",
+      "③ Strapped",
+      "④ them",
+      "⑤ coming"
+    ],
+    "a": 4
+  },
+  {
+    "t": "어법상 틀린 것",
+    "pts": 3,
+    "q": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "p": "A number of studies provide substantial evidence of an innate human disposition to respond differentially to social stimuli. From birth, infants will orient preferentially towards the human face and voice, ① seeming to know that such stimuli are particularly meaningful for them. Moreover, they register this connection actively, imitating a variety of facial gestures that are presented to them. They will even try to match gestures ② which they have some difficulty, experimenting with their own faces until they succeed. When they ③ do succeed, they show pleasure by a brightening of their eyes; when they fail, they show distress. In other words, they not only have an innate capacity for matching their own kinaesthetically experienced bodily movements with ④ those of others that are visually perceived; they have an innate drive to imitate others whom they judge ⑤ to be 'like me'.",
+    "o": [
+      "① seeming",
+      "② which",
+      "③ do",
+      "④ those",
+      "⑤ to be"
+    ],
+    "a": 1
+  },
+  {
+    "t": "어법상 틀린 것",
+    "pts": 3,
+    "q": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "p": "Recognizing ethical issues is the most important step in understanding business ethics. An ethical issue is an identifiable problem, situation, or opportunity that requires a person to choose from among several actions that may ① be evaluated as right or wrong, ethical or unethical. ② Learn how to choose from alternatives and make a decision requires not only good personal values, but also knowledge competence in the business area of concern. Employees also need to know when to rely on their organizations' policies and codes of ethics or ③ have discussions with co-workers or managers on appropriate conduct. Ethical decision making is not always easy because there are always gray areas ④ that create dilemmas, no matter how decisions are made. Such questions require the decision maker to evaluate the ethics of his or her choice and decide ⑤ whether to ask for guidance.",
+    "o": [
+      "① be evaluated",
+      "② Learn",
+      "③ have",
+      "④ that",
+      "⑤ whether"
+    ],
+    "a": 1
+  },
+  {
+    "t": "어법상 틀린 것",
+    "pts": 4,
+    "q": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "p": "Dr. Joseph Bell was a professor of medicine at the University of Edinburgh. His students were amazed by his astonishing powers of observation. He seemed able to determine what patients did for a living, or what illness ① they might have, simply by glancing in their direction. One time he concluded that a patient ② had walked across a golf course on the way to the doctor, simply by looking at his shoes. One of Bell's students was particularly impressed with his teacher's abilities. He filled up notebooks with examples of ③ what he called Bell's \"eerie trick of spotting details.\" The student eventually went into practice himself outside London. He took Dr. Bell's powers of perception, and gave them to a character of his own making — a character who made the young doctor, Arthur Conan Doyle, ④ famous around the world. And so the professor who made even the most complex diagnosis seem \"elementary\" ⑤ becoming the inspiration for fiction's greatest detective, Sherlock Holmes.\n\n* eerie: 오싹한 ** diagnosis: 진단",
+    "o": [
+      "① they",
+      "② had walked",
+      "③ what",
+      "④ famous",
+      "⑤ becoming"
+    ],
+    "a": 4
+  },
+  {
+    "t": "어법상 틀린 것",
+    "pts": 4,
+    "q": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "p": "Providing feedback to students is a critical task of teachers. General psychology has shown that knowledge of results is necessary for improving a skill. Advanced musicians are able to self-critique their performances, but developing music students ① rely on teachers to supply evaluative feedback. The most constructive feedback is that ② which expresses the discrepancies between a student's performance of a piece of music and an optimal version. Expert teachers give more detailed feedback than general appraisals, and music educators generally recognize that more specific teacher feedback facilitates student performance improvement. Researchers also have explored ③ whether the feedback of effective teachers is more often positively or negatively expressed. One might intuitively think that positive comments are more ④ motivated to students and, as a result, are more associated with effective teaching. Although positive feedback is ⑤ likely more helpful with younger learners, more advanced music students seem to accept and benefit from greater levels of criticism in lessons.",
+    "o": [
+      "① rely",
+      "② which",
+      "③ whether",
+      "④ motivated",
+      "⑤ likely"
+    ],
+    "a": 3
+  },
+  {
+    "t": "어법상 틀린 것",
+    "pts": 3,
+    "q": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "p": "Honey can be eaten by itself or mixed with other ingredients. Natural or pure honey has had no additives, preservatives or synthetic ingredients added. Also ① referred to as 'undiluted', it is usually more expensive than diluted honeys. Natural honey can also be called 'blended honey', ② which honeys from various sources are blended together — not by the bees, but by human processors and distributors in stages after the honey has been collected. Blending is frequently done for taste as well as marketing reasons, especially since some consumers find the darker honeys too ③ strong. Mixing different types of honey together can make it more palatable, and also gives a more uniform flavour — this is an important consideration for producers and retailers, who ④ feel the need to guarantee reliable, unsurprising flavours to their customers. Clover is one of the most popular honeys in the U.S., and ⑤ its mild flavour and taste have become familiar to many Americans.\n\n* dilute: 묽게 하다 ** palatable: 입에 맞는",
+    "o": [
+      "① referred",
+      "② which",
+      "③ strong",
+      "④ feel",
+      "⑤ its"
+    ],
+    "a": 1
+  },
+  {
+    "sec": "유형3 · 어휘 (15~17번)",
+    "t": "문맥상 낱말의 쓰임",
+    "pts": 4,
+    "q": "다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+    "p": "Emotion socialization — learning from other people about emotions and how to deal with them — starts early in life and plays a foundational role for emotion regulation development. Although extra-familial influences, such as peers or media, gain in importance during adolescence, parents remain the ① primary socialization agents. For example, their own responses to emotional situations serve as a role model for emotion regulation, increasing the likelihood that their children will show ② similar reactions in comparable situations. Parental practices at times when their children are faced with emotional challenges also impact emotion regulation development. Whereas direct soothing and directive guidance of what to do are beneficial for younger children, they may ③ cultivate on adolescents' autonomy striving. In consequence, adolescents might pull away from, rather than turn toward, their parents in times of emotional crisis, unless parental practices are ④ adjusted. More suitable in adolescence is ⑤ indirect support of autonomous emotion regulation.",
+    "o": [
+      "① primary",
+      "② similar",
+      "③ cultivate",
+      "④ adjusted",
+      "⑤ indirect"
+    ],
+    "a": 2
+  },
+  {
+    "t": "문맥상 낱말의 쓰임",
+    "pts": 4,
+    "q": "다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+    "p": "Near the equator, many species of bird breed all year round. But in temperate and polar regions, the breeding seasons of birds are often sharply ① defined. They are triggered mainly by changes in day length. If all goes well, the outcome is that birds raise their young when the food supply is at its peak. Most birds are not simply ② reluctant to breed at other times but they are also physically incapable of doing so. This is because their reproductive system ③ shrinks, which helps flying birds save weight. The main exception to this rule are nomadic desert species. These can initiate their breeding cycle within days of rain. It's for making the ④ least of the sudden breeding opportunity. Also, different species divide the breeding season up in different ways. In an exceptionally good year, a pair of House Sparrows, a kind of songbird, can raise ⑤ successive broods through a marathon reproductive effort.\n\n* nomadic: 유목성의 ** brood: 함께 태어난 새끼들",
+    "o": [
+      "① defined",
+      "② reluctant",
+      "③ shrinks",
+      "④ least",
+      "⑤ successive"
+    ],
+    "a": 3
+  },
+  {
+    "t": "문맥상 낱말의 쓰임",
+    "pts": 3,
+    "q": "다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+    "p": "Although empathy is widely praised by scholars and public figures, not everyone is an empathy booster. Critics of empathy argue that empathy will not save us from interpersonal and intergroup conflict. In fact, they argue, empathy makes such conflicts ① worse. These critics maintain that empathy can be exhausting and lead to burnout or insensitivity to suffering. They argue that we tend to empathize strongly with our in-group and ② resist empathizing with out-groups, and even enjoy the suffering of out-groups in competitive or threatening contexts. Thus, the prescription for more empathy is often ③ efficient in cases of conflict. Empathy, they argue, can further encourage conflict and force us into an us vs. them mentality. Finally, even when we try to empathize with others who are dissimilar from us or in unfamiliar contexts, sometimes we are ④ unable to accurately empathize with their experiences. Critics of empathy argue that we should give up on empathy and employ other tools in ⑤ pursuit of social harmony.",
+    "o": [
+      "① worse",
+      "② resist",
+      "③ efficient",
+      "④ unable",
+      "⑤ pursuit"
+    ],
+    "a": 2
+  },
+  {
+    "sec": "유형4 · 빈칸 추론 (18~21번)",
+    "t": "빈칸 추론",
+    "pts": 4,
+    "q": "다음 빈칸에 들어갈 말로 가장 적절한 것을 고르시오.",
+    "p": "We might forget an anecdote about a stranger because it makes few connections with our existing associations, but we won't forget a piece of gossip about our cousin. There's one complex network that is larger and quicker to access than all others — the self. We've been thinking about ourselves in our whole lives. So if a new piece of information has something to do with us, it will be more easily and thoroughly processed. It hits even closer to home than our actual home — we can take a vacation away from our home, but not from ourselves. The most effective communicators find ways to make the abstract ________. Consider the warning that law schools give to motivate first-year law students concerning the rigors of their program. Hearing that \"the first-year dropout rate is 33%\" is an abstract statistic. \"Look to your left, look to your right. One of the three of you won't be joining us next fall\" wakes up the self.\n\n* rigor: 엄격함",
+    "o": [
+      "① objective",
+      "② logical",
+      "③ personal",
+      "④ creative",
+      "⑤ symbolic"
+    ],
+    "a": 2
+  },
+  {
+    "t": "빈칸 추론",
+    "pts": 4,
+    "q": "다음 빈칸에 들어갈 말로 가장 적절한 것을 고르시오.",
+    "p": "Color is an interpretation of wavelengths, one that only exists internally. And it gets stranger, because the wavelengths we're talking about involve only what we call \"visible light\", a spectrum of wavelengths that runs from red to violet. But visible light constitutes only a tiny fraction of the electromagnetic spectrum — less than one ten-trillionth of it. All the rest of the spectrum — including radio waves, microwaves, X-rays, gamma rays, cell phone conversations, wi-fi, and so on — all of this is flowing through us right now, and we're completely unaware of it. This is because we don't have any specialized biological receptors to pick up on these signals from other parts of the spectrum. The slice of reality that we can see is ________.\n\n* electromagnetic: 전자기의 ** receptor: 수용체",
+    "o": [
+      "① hindered by other wavelengths",
+      "② derived from our imagination",
+      "③ perceived through all senses",
+      "④ filtered by our stereotypes",
+      "⑤ limited by our biology"
+    ],
+    "a": 4
+  },
+  {
+    "t": "빈칸 추론",
+    "pts": 3,
+    "q": "다음 빈칸에 들어갈 말로 가장 적절한 것을 고르시오.",
+    "p": "As always happens with natural selection, bats and their prey have ________. It's believed that hearing in moths arose specifically in response to the threat of being eaten by bats. (Not all insects can hear.) Over millions of years, moths have evolved the ability to detect sounds at ever higher frequencies, and, as they have, the frequencies of bats' vocalizations have risen, too. Some moth species have also evolved scales on their wings and a fur-like coat on their bodies; both act as \"acoustic camouflage,\" by absorbing sound waves in the frequencies emitted by bats, thereby preventing those sound waves from bouncing back. The B-2 bomber and other \"stealth\" aircraft have fuselages made of materials that do something similar with radar beams.\n\n* camouflage: 위장 *** fuselage: (비행기의) 기체",
+    "o": [
+      "① been in a fierce war over scarce food sources",
+      "② been engaged in a life-or-death sensory arms race",
+      "③ invented weapons that are not part of their bodies",
+      "④ evolved to cope with other noise-producing wildlife",
+      "⑤ adapted to flying in night skies absent of any lights"
+    ],
+    "a": 1
+  },
+  {
+    "t": "빈칸 추론",
+    "pts": 4,
+    "q": "다음 빈칸에 들어갈 말로 가장 적절한 것을 고르시오.",
+    "p": "Many people look for safety and security in popular thinking. They figure that if a lot of people are doing something, then it must be right. It must be a good idea. If most people accept it, then it probably represents fairness, equality, compassion, and sensitivity, right? Not necessarily. Popular thinking said the earth was the center of the universe, yet Copernicus studied the stars and planets and proved mathematically that the earth and the other planets in our solar system revolved around the sun. Popular thinking said surgery didn't require clean instruments, yet Joseph Lister studied the high death rates in hospitals and introduced antiseptic practices that immediately saved lives. Popular thinking said that women shouldn't have the right to vote, yet people like Emmeline Pankhurst and Susan B. Anthony fought for and won that right. We must always remember. People may say that there's safety in numbers, but that's not always true.\n\n* antiseptic: 멸균의",
+    "o": [
+      "① majority rule should be founded on fairness",
+      "② the crowd is generally going in the right direction",
+      "③ the roles of leaders and followers can change at any time",
+      "④ people behave in a different fashion to others around them",
+      "⑤ there is a huge difference between acceptance and intelligence"
+    ],
+    "a": 4
+  },
+  {
+    "sec": "유형5 · 문장삽입/순서/요약/독해 (22~30번)",
+    "t": "문장 삽입",
+    "pts": 4,
+    "q": "글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 적절한 곳을 고르시오.",
+    "p": "[주어진 문장]\nIn the electric organ the muscle cells are connected in larger chunks, which makes the total current intensity larger than in ordinary muscles.\n\nElectric communication is mainly known in fish. The electric signals are produced in special electric organs. When the signal is discharged the electric organ will be negatively loaded compared to the head and an electric field is created around the fish. ( ① ) A weak electric current is created also in ordinary muscle cells when they contract. ( ② ) The fish varies the signals by changing the form of the electric field or the frequency of discharging. ( ③ ) The system is only working over small distances, about one to two meters. ( ④ ) This is an advantage since the species using the signal system often live in large groups with several other species. ( ⑤ ) If many fish send out signals at the same time, the short range decreases the risk of interference.",
+    "o": [
+      "① (①)",
+      "② (②)",
+      "③ (③)",
+      "④ (④)",
+      "⑤ (⑤)"
+    ],
+    "a": 1
+  },
+  {
+    "t": "글의 순서",
+    "pts": 4,
+    "q": "주어진 글 다음에 이어질 글의 순서로 가장 적절한 것을 고르시오.",
+    "p": "[주어진 글]\nThe right to be forgotten is a right distinct from but related to a right to privacy. The right to privacy is, among other things, the right for information traditionally regarded as protected or personal not to be revealed.\n\n(A) One motivation for such a right is to allow individuals to move on with their lives and not be defined by a specific event or period in their lives. For example, it has long been recognized in some countries, such as the UK and France, that even past criminal convictions should eventually be \"spent\" and not continue to affect a person's life.\n\n(B) The right to be forgotten, in contrast, can be applied to information that has been in the public domain. The right to be forgotten broadly includes the right of an individual not to be forever defined by information from a specific point in time.\n\n(C) Despite the reason for supporting the right to be forgotten, the right to be forgotten can sometimes come into conflict with other rights. For example, formal exceptions are sometimes made for security or public health reasons.",
+    "o": [
+      "① (A)-(C)-(B)",
+      "② (B)-(A)-(C)",
+      "③ (B)-(C)-(A)",
+      "④ (C)-(A)-(B)",
+      "⑤ (C)-(B)-(A)"
+    ],
+    "a": 1
+  },
+  {
+    "t": "글의 순서",
+    "pts": 3,
+    "q": "주어진 글 다음에 이어질 글의 순서로 가장 적절한 것을 고르시오.",
+    "p": "[주어진 글]\nA computational algorithm that takes input data and generates some output from it doesn't really embody any notion of meaning. Certainly, such a computation does not generally have as its purpose its own survival and well-being.\n\n(A) Some bees might not bother to make the journey, considering it not worthwhile. The input, such as it is, is processed in the light of the organism's own internal states and history; there is nothing prescriptive about its effects.\n\n(B) It does not, in general, assign value to the inputs. Compare, for example, a computer algorithm with the waggle dance of the honeybee, by which means a foraging bee conveys to others in the hive information about the source of food it has located.\n\n(C) The \"dance\" — a series of stylized movements on the comb — shows the bees how far away the food is and in which direction. But this input does not simply program other bees to go out and look for it. Rather, they evaluate this information, comparing it with their own knowledge of the surroundings.\n\n* forage: 먹이를 찾아다니다 ** comb: 벌집",
+    "o": [
+      "① (A)-(C)-(B)",
+      "② (B)-(A)-(C)",
+      "③ (B)-(C)-(A)",
+      "④ (C)-(A)-(B)",
+      "⑤ (C)-(B)-(A)"
+    ],
+    "a": 2
+  },
+  {
+    "t": "요약문 완성",
+    "pts": 4,
+    "q": "다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+    "p": "Distance is a reliable indicator of the relationship between two people. Strangers stand further apart than do acquaintances, acquaintances stand further apart than friends, and friends stand further apart than romantic partners. Sometimes, of course, these rules are violated. Recall the last time you rode 20 stories in an elevator packed with total strangers. The sardine-like experience no doubt made the situation a bit uncomfortable. With your physical space violated, you may have tried to create \"psychological\" space by avoiding eye contact, focusing instead on the elevator buttons. By reducing closeness in one nonverbal channel (eye contact), one can compensate for unwanted closeness in another channel (proximity). Similarly, if you are talking with someone who is seated several feet away at a large table, you are likely to maintain constant eye contact — something you might feel uncomfortable doing if you were standing next to each other.\n\n↓\n[요약] Physical distance between people is __(A)__ by relationship status, but when the distance is not appropriate, people __(B)__ their nonverbal communication to establish a comfortable psychological distance.",
+    "o": [
+      "① (A) determined – (B) adjust",
+      "② (A) concealed – (B) interpret",
+      "③ (A) influenced – (B) ignore",
+      "④ (A) predicted – (B) stop",
+      "⑤ (A) measured – (B) decrease"
+    ],
+    "a": 0
+  },
+  {
+    "t": "장문 독해 — 제목 (26번)",
+    "pts": 3,
+    "q": "[26~27] 다음 글을 읽고 물음에 답하시오.\n\n(26번) 위 글의 제목으로 가장 적절한 것은?",
+    "p": "When your hand is hanging at your side and then you lift it, opposing muscles on your upper arm shorten and lengthen — contract and relax — to bend the elbow. Biceps contract, and triceps relax. Reversing the motion, when you drop your hand back down, muscles (a) reverse roles. Triceps contract, and biceps relax. Lift your hand or drop it, and muscle shows what it is: a system of coordination, managed by orchestrated tension. As arms and legs rotate around joints, muscles activate and deactivate, contract and relax. All physical activity is (b) paradoxical, in this sense: Movement depends on what muscles don't do, as much as it depends on what they do. Both are necessary, each in its time. Start with nature versus nurture: Some people are stronger or more muscular than others; is the difference (c) inborn, or does it depend on what people do? Do you have to lift weights, or is walking enough exercise? How should you do the exercise? Lift heavy weights or lighter ones? Where muscle is concerned, (d) few oppositions are true polarities. Look closely, and most prove to be paradoxes. Born and made, heavy and light, fast and slow: Those opposites actually (e) exclude each other.\n\n* biceps: 이두근 ** triceps: 삼두근",
+    "o": [
+      "① Dos and Don'ts to Prevent Muscle Loss",
+      "② Why Is It Better to Do One Exercise Consistently?",
+      "③ Harmony of Contrasts: What We Don't Know About Muscles",
+      "④ Systematic Stages of a Human's Muscle Recovery",
+      "⑤ Common Motion Patterns in All Body Parts"
+    ],
+    "a": 2
+  },
+  {
+    "t": "장문 독해 — 어휘 (27번)",
+    "pts": 3,
+    "q": "(27번) 밑줄 친 (a)~(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?\n(26번 지문 기준: (a)reverse / (b)paradoxical / (c)inborn / (d)few / (e)exclude)",
+    "p": "",
+    "o": [
+      "① (a)",
+      "② (b)",
+      "③ (c)",
+      "④ (d)",
+      "⑤ (e)"
+    ],
+    "a": 4
+  },
+  {
+    "t": "장문 독해 — 순서 (28번)",
+    "pts": 3,
+    "q": "[28~30] 다음 글을 읽고 물음에 답하시오.\n\n(28번) 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+    "p": "(A) It was a hot day in early fall. Wylder was heading to the school field for his first training. He had just joined the team with five other students after a successful tryout. Approaching the field, (a) he saw players getting ready, pulling up their socks and strapping on shin guards. But they weren't together. New players were sitting in the shade by the garage, while the others were standing in the sun by the right pole. Then Coach McGraw came and watched the players.\n\n(B) 'Wow,' thought Wylder. From his new location on the grass, he stretched out his legs. He liked what he was hearing. A new sense of team spirit came across (b) him, a deeper sense of connection. It was encouraging to hear Coach talk about this. Now his speech was over. The players got up and started walking on the field to warm up. \"Good job, Coach. That was good,\" Wylder said to McGraw in a low voice as he walked past him, keeping (c) his eyes down out of respect.\n\n(C) McGraw continued to point, calling each player out, until he was satisfied with the rearrangement. \"Okay, this is how it's going to be,\" he began. \"We need to learn how to trust and work with each other. This is how a team plays. This is how I want you to be on and off the field: together.\" The players looked at each other. Almost immediately, McGraw noticed a change in their postures and faces. (d) He saw some of them starting to smile.\n\n(D) Coach McGraw, too, saw the pattern — new kids and others grouping separately. 'This has to change,' he thought. He wanted a winning team. To do that, he needed to build relationships. \"I want you guys to come over here in the middle and sit,\" he called the players as he walked over. \"You!\" McGraw roared, pointing at Wylder. \"Come here onto the field and sit. And Jonny! You sit over there!\" He started pointing, making sure they mixed together. Wylder realized what Coach was trying to do, so (e) he hopped onto the field.",
+    "o": [
+      "① (B)-(D)-(C)",
+      "② (C)-(B)-(D)",
+      "③ (C)-(D)-(B)",
+      "④ (D)-(B)-(C)",
+      "⑤ (D)-(C)-(B)"
+    ],
+    "a": 4
+  },
+  {
+    "t": "장문 독해 — 지칭 (29번)",
+    "pts": 2,
+    "q": "(29번) 밑줄 친 (a)~(e) 중 가리키는 대상이 나머지 넷과 다른 것은?\n(28번 지문 기준 — (a),(c),(e): Wylder / (b): Wylder / (d): McGraw)",
+    "p": "",
+    "o": [
+      "① (a)",
+      "② (b)",
+      "③ (c)",
+      "④ (d)",
+      "⑤ (e)"
+    ],
+    "a": 3
+  },
+  {
+    "t": "장문 독해 — 일치 (30번)",
+    "pts": 2,
+    "q": "(30번) 윗글에 관한 내용으로 적절하지 않은 것은?",
+    "p": "",
+    "o": [
+      "① Wylder는 다섯 명의 다른 학생과 팀에 합류했다.",
+      "② Wylder는 잔디 위의 새로운 자리에서 다리를 쭉 폈다.",
+      "③ McGraw는 재배열이 마음에 들 때까지 선수들을 불러냈다.",
+      "④ McGraw는 선수들의 자세와 얼굴의 변화를 알아차렸다.",
+      "⑤ McGraw는 선수들에게 운동장 밖으로 나가라고 말했다."
+    ],
+    "a": 4
+  }
+];
+let name="",ans=new Array(Q.length).fill(null);
+
+function level(s,t){
+  const r=s/t;
+  if(r>=0.9) return "최상위 (S)";
+  if(r>=0.75) return "상위 (A)";
+  if(r>=0.55) return "중상 (B)";
+  if(r>=0.35) return "중하 (C)";
+  return "기초 (D)";
+}
+
+function start(){
+  name=document.getElementById("sn").value.trim();
+  if(!name){alert("이름을 입력해 주세요.");return;}
+  document.getElementById("cover").style.display="none";
+  document.getElementById("quiz").style.display="block";
+  render();
+}
+
+function render(){
+  let h="",sec=null;
+  Q.forEach((q,i)=>{
+    if(q.sec&&q.sec!==sec){sec=q.sec;h+=`<div class="sec"><h2>${q.sec}</h2><span>Q${i+1}~</span></div>`;}
+    const p=q.p?`<div class="passage">${q.p.replace(/\n/g,"<br>")}</div>`:"";
+    h+=`<div class="qc" id="c${i}"><span class="pts">${q.pts}점</span>
+    <div class="qtop"><div class="qnum">${i+1}</div><div><div class="qtype">${q.t||""}</div><div class="qtext">${q.q.replace(/\n/g,"<br>")}</div></div></div>
+    ${p}<div class="opts">`;
+    q.o.forEach((o,j)=>{h+=`<label class="ol" id="o${i}_${j}" onclick="pick(${i},${j})"><input type="radio" name="q${i}"><span class="oc">${j+1}</span><span class="ot">${o}</span></label>`;}); 
+    h+=`</div></div>`;
+  });
+  document.getElementById("qb").innerHTML=h;
+}
+
+function pick(qi,oi){
+  ans[qi]=oi;
+  for(let j=0;j<5;j++){const e=document.getElementById(`o${qi}_${j}`);if(e)e.classList.toggle("sel",j===oi);}
+  document.getElementById(`c${qi}`).classList.add("done");
+  upd();
+}
+
+function upd(){
+  const d=ans.filter(a=>a!==null).length;
+  document.getElementById("dc").textContent=d;
+  document.getElementById("pf").style.width=`${d/Q.length*100}%`;
+  document.getElementById("si").innerHTML=`<b>${d}/30문항</b> 완료`;
+}
+
+function submit(){
+  const d=ans.filter(a=>a!==null).length,left=Q.length-d;
+  if(left>0&&!confirm(`아직 ${left}문항을 풀지 않았습니다. 그래도 제출하시겠습니까?`))return;
+  let sc=0;
+  Q.forEach((q,i)=>{if(ans[i]===q.a)sc++;});
+  document.getElementById("quiz").style.display="none";
+  document.getElementById("result").style.display="flex";
+  document.getElementById("rs").textContent=sc;
+  document.getElementById("rl").textContent=level(sc,Q.length);
+}
+</script>
+</body>
+</html>
